@@ -64,6 +64,27 @@ variable "enable_ipv6" {
   default     = false
 }
 
+variable "vcn_is_oracle_gua_allocation_enabled" {
+  description = "If Oracle will assign the VCN a IPv6 /56 CIDR block when IPv6 is enabled."
+  type        = bool
+  default     = true
+}
+
+variable "vcn_ipv6private_cidr_blocks" {
+  description = "List of IPv6 private CIDR blocks to be used for the VCN."
+  type        = list(string)
+  default     = []
+}
+
+variable "vcn_byoipv6cidr_details" {
+  description = "List of BYOIPv6 CIDR blocks to be used for the VCN."
+  type = list(object({
+    byoipv6range_id = string
+    ipv6cidr_block  = string
+  }))
+  default = []
+}
+
 variable "lockdown_default_seclist" {
   description = "whether to remove all default security rules from the VCN Default Security List"
   default     = true
@@ -140,6 +161,17 @@ variable "service_gateway_display_name" {
   validation {
     condition     = length(var.service_gateway_display_name) > 0
     error_message = "The service_gateway_display_name value cannot be an empty string."
+  }
+}
+
+variable "igw_ngw_mixed_route_table_display_name" {
+  description = "(Updatable) Name of the Mixed Route Table (NGW for IPv4, IGW for IPv6). Does not have to be unique."
+  type        = string
+  default     = "igw-ngw-mixed-gateway"
+
+  validation {
+    condition     = length(var.igw_ngw_mixed_route_table_display_name) > 0
+    error_message = "The igw_ngw_mixed_route_table_display_name value cannot be an empty string."
   }
 }
 
