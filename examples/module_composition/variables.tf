@@ -139,3 +139,29 @@ variable "service_gateway_display_name" {
   default     = "sgw"
 }
 
+variable "vcn_is_oracle_gua_allocation_enabled" {
+  description = "If Oracle will assign the VCN a IPv6 /56 CIDR block when IPv6 is enabled."
+  type        = bool
+  default     = false
+}
+
+variable "vcn_ipv6private_cidr_blocks" {
+  description = "List of private IPv6 CIDR blocks to be used for the VCN."
+  type        = list(string)
+  default     = []
+}
+
+variable "vcn_byoipv6cidr_details" {
+  description = "List of BYOIPv6 CIDR blocks to be used for the VCN."
+  type = list(object({
+    byoipv6range_id = string
+    ipv6cidr_block  = string
+  }))
+  default = []
+}
+
+variable "igw_ngw_mixed_route_table_display_name" {
+  description = "(Updatable) Name of Route Table. Does not have to be unique."
+  type        = string
+  default     = "igw-ngw-mixed-gateway"
+}

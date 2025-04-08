@@ -34,6 +34,12 @@ variable "nat_route_id" {
   type        = string
 }
 
+variable "igw_ngw_mixed_route_id" {
+  description = "IPv6 route table id with IGW for IPv6 and NGW for IPv4."
+  type        = string
+  default     = null
+}
+
 variable "defined_tags" {
   description = "predefined and scoped to a namespace to tag the resources created using defined tags."
   type        = map(string)
