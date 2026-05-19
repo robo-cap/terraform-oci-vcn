@@ -30,6 +30,14 @@ create_service_gateway = false
 
 enable_ipv6 = false
 
+# Optional IPv6 VCN allocation parameters.
+# When enable_ipv6 = true, Oracle GUA allocation defaults to true.
+# Subnet ipv6cidr_blocks shorthand entries derive from public/BYO IPv6 first,
+# then vcn_ipv6private_cidr_blocks.
+# vcn_is_oracle_gua_allocation_enabled = true
+# vcn_ipv6private_cidr_blocks          = []
+# vcn_byoipv6cidr_details              = []
+
 vcn_cidrs = ["10.0.0.0/16", "172.16.0.0/16", "192.168.0.0/24"]
 
 vcn_dns_label = "vcn"

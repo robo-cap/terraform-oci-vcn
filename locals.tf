@@ -4,6 +4,9 @@
 locals {
   anywhere      = "0.0.0.0/0"
   anywhere_ipv6 = "::/0"
+  has_public_ipv6 = var.enable_ipv6 && (
+    var.vcn_is_oracle_gua_allocation_enabled || length(var.vcn_byoipv6cidr_details) > 0
+  )
   internet_gateway_display_name = coalesce(
     var.label_prefix == "none" && var.internet_gateway_display_name == "none" ? "internet-route" : null,
     var.label_prefix == "none" && var.internet_gateway_display_name != "none" ? var.internet_gateway_display_name : null,

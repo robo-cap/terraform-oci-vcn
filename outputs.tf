@@ -32,6 +32,11 @@ output "nat_route_id" {
   value       = join(",", oci_core_route_table.nat[*].id)
 }
 
+output "nat_ipv4_igw_ipv6_route_id" {
+  description = "id of VCN route table using NAT gateway for IPv4 and Internet Gateway for IPv6"
+  value       = join(",", oci_core_route_table.nat_ipv4_igw_ipv6[*].id)
+}
+
 output "sgw_route_id" {
   description = "id of VCN Service gateway route table"
   value       = join(",", oci_core_route_table.service_gw[*].id)
@@ -64,6 +69,11 @@ output "nat_gateway_all_attributes" {
 output "nat_route_all_attributes" {
   description = "all attributes of created nat gateway route table"
   value       = { for k, v in oci_core_route_table.nat : k => v }
+}
+
+output "nat_ipv4_igw_ipv6_route_all_attributes" {
+  description = "all attributes of created route table using NAT gateway for IPv4 and Internet Gateway for IPv6"
+  value       = { for k, v in oci_core_route_table.nat_ipv4_igw_ipv6 : k => v }
 }
 
 output "service_gateway_all_attributes" {

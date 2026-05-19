@@ -66,6 +66,11 @@ module "vcn" {
   vcn_name                 = var.vcn_name
   lockdown_default_seclist = var.lockdown_default_seclist
   attached_drg_id          = var.attached_drg_id
+
+  # IPv6 parameters (Optional)
+  vcn_is_oracle_gua_allocation_enabled = var.vcn_is_oracle_gua_allocation_enabled # Enable Global Unicast Address (GUA) VCN allocation. Defaults to true.
+  vcn_ipv6private_cidr_blocks          = var.vcn_ipv6private_cidr_blocks          # List with IPv6 private CIDR blocks
+  vcn_byoipv6cidr_details              = var.vcn_byoipv6cidr_details              # List with BYOIPv6 CIDR blocks
 }
 ```
 

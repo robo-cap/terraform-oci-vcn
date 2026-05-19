@@ -21,28 +21,63 @@ resource "oci_core_default_security_list" "restore_default" {
 
   egress_security_rules {
     // allow all egress traffic
-    destination = "0.0.0.0/0"
+    destination = local.anywhere
     protocol    = "all"
+  }
+
+  dynamic "egress_security_rules" {
+    //allow all egress traffic for IPv6
+    for_each = var.enable_ipv6 ? [0] : []
+    content {
+      destination = local.anywhere_ipv6
+      protocol    = "all"
+    }
   }
 
   ingress_security_rules {
     // allow all SSH
     protocol = "6"
-    source   = "0.0.0.0/0"
+    source   = local.anywhere
     tcp_options {
       min = 22
       max = 22
     }
   }
 
+  dynamic "ingress_security_rules" {
+    //allow all SSH for IPv6
+    for_each = var.enable_ipv6 ? [0] : []
+    content {
+      protocol = "6"
+      source   = local.anywhere_ipv6
+      tcp_options {
+        min = 22
+        max = 22
+      }
+    }
+  }
+
   ingress_security_rules {
     // allow ICMP for all type 3 code 4
     protocol = "1"
-    source   = "0.0.0.0/0"
+    source   = local.anywhere
 
     icmp_options {
       type = "3"
       code = "4"
+    }
+  }
+
+  dynamic "ingress_security_rules" {
+    //allow ICMPv6 for all type 2 code 0 (Packet Too Big)
+    for_each = var.enable_ipv6 ? [0] : []
+    content {
+      protocol = "58"
+      source   = local.anywhere_ipv6
+      icmp_options {
+        type = "2"
+        code = "0"
+      }
     }
   }
 

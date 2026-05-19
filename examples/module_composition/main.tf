@@ -18,14 +18,17 @@ module "vcn" {
   defined_tags   = var.defined_tags
 
   # vcn parameters
-  create_internet_gateway  = var.create_internet_gateway  # boolean: true or false
-  lockdown_default_seclist = var.lockdown_default_seclist # boolean: true or false
-  create_nat_gateway       = var.create_nat_gateway       # boolean: true or false
-  create_service_gateway   = var.create_service_gateway   # boolean: true or false
-  enable_ipv6              = var.enable_ipv6
-  vcn_cidrs                = var.vcn_cidrs # List of IPv4 CIDRs
-  vcn_dns_label            = var.vcn_dns_label
-  vcn_name                 = var.vcn_name
+  create_internet_gateway              = var.create_internet_gateway  # boolean: true or false
+  lockdown_default_seclist             = var.lockdown_default_seclist # boolean: true or false
+  create_nat_gateway                   = var.create_nat_gateway       # boolean: true or false
+  create_service_gateway               = var.create_service_gateway   # boolean: true or false
+  enable_ipv6                          = var.enable_ipv6
+  vcn_cidrs                            = var.vcn_cidrs # List of IPv4 CIDRs
+  vcn_dns_label                        = var.vcn_dns_label
+  vcn_name                             = var.vcn_name
+  vcn_is_oracle_gua_allocation_enabled = var.vcn_is_oracle_gua_allocation_enabled # boolean: true or false
+  vcn_ipv6private_cidr_blocks          = var.vcn_ipv6private_cidr_blocks          # List of IPv6 private CIDRs
+  vcn_byoipv6cidr_details              = var.vcn_byoipv6cidr_details              # List of IPv6 BYO CIDR details
 
   # gateways parameters
   internet_gateway_display_name = var.internet_gateway_display_name
@@ -51,4 +54,3 @@ output "module_vcn_ids" {
     vcn_id                       = module.vcn.vcn_id
   }
 }
-

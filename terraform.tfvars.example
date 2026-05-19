@@ -115,6 +115,17 @@ attached_drg_id = null
 #  sub3 = {cidr_block="10.0.6.0/24",availability_domain=1}
 #}
 
+#Subnets when `enable_ipv6 = true`
+## Supported notation for ipv6cidr_blocks is "newbits, netnum" or "IPv6_CIDR"
+## Shorthand entries are derived from the first VCN IPv6 CIDR block:
+## Oracle-assigned/BYO public IPv6 first, then vcn_ipv6private_cidr_blocks.
+## E.g.: ipv6cidr_blocks=["8, 0", "FC00::/64"]
+#subnets = {
+#  sub1 = {name = "subnet1", type="public", cidr_block = "10.0.4.0/24"}
+#  sub2 = {cidr_block="10.0.5.0/24",ipv6cidr_blocks=["8, 0"], type="private"}
+#  sub3 = {cidr_block="10.0.7.0/24",type="private",ipv6cidr_blocks=["8, 1"]}
+#}
+
 #Logging
 #enable_vcn_logging = true
 #log_retention_duration = 30
