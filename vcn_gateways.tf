@@ -31,6 +31,7 @@ resource "oci_core_route_table" "ig" {
   route_rules {
     # * With this route table, Internet Gateway is always declared as the default gateway
     destination       = local.anywhere
+    destination_type  = "CIDR_BLOCK"
     network_entity_id = oci_core_internet_gateway.ig[0].id
     description       = "Terraformed - Auto-generated at Internet Gateway creation: Internet Gateway as default gateway"
   }
@@ -41,6 +42,7 @@ resource "oci_core_route_table" "ig" {
 
     content {
       destination       = local.anywhere_ipv6
+      destination_type  = "CIDR_BLOCK"
       network_entity_id = oci_core_internet_gateway.ig[0].id
       description       = "Terraformed - Auto-generated at Internet Gateway creation: Internet Gateway as default gateway"
     }
@@ -106,7 +108,7 @@ resource "oci_core_route_table" "ig" {
   vcn_id = oci_core_vcn.vcn.id
 
   lifecycle {
-    ignore_changes = [defined_tags, freeform_tags]
+    ignore_changes = [defined_tags, freeform_tags, route_rules]
   }
 
   count = var.create_internet_gateway == true ? 1 : 0
@@ -190,7 +192,7 @@ resource "oci_core_nat_gateway" "nat_gateway" {
   freeform_tags = var.freeform_tags
   defined_tags  = var.defined_tags
 
-  public_ip_id = var.nat_gateway_public_ip_id != "none" ? var.nat_gateway_public_ip_id != "RESERVED" ?  var.nat_gateway_public_ip_id : join(",",oci_core_public_ip.nat_gateway_public_ip.*.id) : null
+  public_ip_id = var.nat_gateway_public_ip_id != "none" ? var.nat_gateway_public_ip_id != "RESERVED" ? var.nat_gateway_public_ip_id : join(",", oci_core_public_ip.nat_gateway_public_ip.*.id) : null
 
   vcn_id = oci_core_vcn.vcn.id
 
@@ -299,6 +301,84 @@ resource "oci_core_route_table" "nat" {
   }
 
   count = var.create_nat_gateway ? 1 : 0
+}
+
+resource "oci_core_route_table" "nat_ipv4_igw_ipv6" {
+  compartment_id = var.compartment_id
+  display_name   = "${local.nat_gateway_display_name}-ipv4-igw-ipv6"
+
+  freeform_tags = var.freeform_tags
+  defined_tags  = var.defined_tags
+
+  route_rules {
+    destination       = local.anywhere
+    destination_type  = "CIDR_BLOCK"
+    network_entity_id = oci_core_nat_gateway.nat_gateway[0].id
+    description       = "Terraformed - Auto-generated at NAT Gateway creation: NAT Gateway as default gateway for IPv4"
+  }
+
+  route_rules {
+    destination       = local.anywhere_ipv6
+    destination_type  = "CIDR_BLOCK"
+    network_entity_id = oci_core_internet_gateway.ig[0].id
+    description       = "Terraformed - Auto-generated at Internet Gateway creation: Internet Gateway as default gateway for IPv6"
+  }
+
+  dynamic "route_rules" {
+    for_each = var.nat_gateway_route_rules != null ? { for k, v in var.nat_gateway_route_rules : k => v
+    if v.network_entity_id == "drg" && var.attached_drg_id != null } : {}
+
+    content {
+      destination       = route_rules.value.destination
+      destination_type  = route_rules.value.destination_type
+      network_entity_id = var.attached_drg_id
+      description       = route_rules.value.description
+    }
+  }
+
+  dynamic "route_rules" {
+    for_each = var.nat_gateway_route_rules != null ? { for k, v in var.nat_gateway_route_rules : k => v
+    if v.network_entity_id == "nat_gateway" } : {}
+
+    content {
+      destination       = route_rules.value.destination
+      destination_type  = route_rules.value.destination_type
+      network_entity_id = oci_core_nat_gateway.nat_gateway[0].id
+      description       = route_rules.value.description
+    }
+  }
+
+  dynamic "route_rules" {
+    for_each = var.nat_gateway_route_rules != null ? { for k, v in var.nat_gateway_route_rules : k => v
+    if startswith(v.network_entity_id, "lpg@") && var.local_peering_gateways != null } : {}
+
+    content {
+      destination       = route_rules.value.destination
+      destination_type  = route_rules.value.destination_type
+      network_entity_id = oci_core_local_peering_gateway.lpg[split("@", route_rules.value.network_entity_id)[1]].id
+      description       = route_rules.value.description
+    }
+  }
+
+  dynamic "route_rules" {
+    for_each = var.nat_gateway_route_rules != null ? { for k, v in var.nat_gateway_route_rules : k => v
+    if contains(["drg", "nat_gateway"], v.network_entity_id) == false && startswith(v.network_entity_id, "lpg@") == false } : {}
+
+    content {
+      destination       = route_rules.value.destination
+      destination_type  = route_rules.value.destination_type
+      network_entity_id = route_rules.value.network_entity_id
+      description       = route_rules.value.description
+    }
+  }
+
+  vcn_id = oci_core_vcn.vcn.id
+
+  lifecycle {
+    ignore_changes = [defined_tags, freeform_tags]
+  }
+
+  count = var.create_nat_gateway && var.create_internet_gateway && local.has_public_ipv6 ? 1 : 0
 }
 
 

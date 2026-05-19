@@ -64,6 +64,27 @@ variable "enable_ipv6" {
   default     = false
 }
 
+variable "vcn_is_oracle_gua_allocation_enabled" {
+  description = "If Oracle will assign the VCN a IPv6 /56 CIDR block when IPv6 is enabled."
+  type        = bool
+  default     = true
+}
+
+variable "vcn_ipv6private_cidr_blocks" {
+  description = "List of IPv6 private CIDR blocks to be used for the VCN."
+  type        = list(string)
+  default     = []
+}
+
+variable "vcn_byoipv6cidr_details" {
+  description = "List of BYOIPv6 CIDR blocks to be used for the VCN."
+  type = list(object({
+    byoipv6range_id = string
+    ipv6cidr_block  = string
+  }))
+  default = []
+}
+
 variable "lockdown_default_seclist" {
   description = "whether to remove all default security rules from the VCN Default Security List"
   default     = true

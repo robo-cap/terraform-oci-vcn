@@ -34,6 +34,12 @@ variable "nat_route_id" {
   type        = string
 }
 
+variable "nat_ipv4_igw_ipv6_route_id" {
+  description = "Route table id for private IPV4 and public IPV6 subnets."
+  type        = string
+  default     = null
+}
+
 variable "defined_tags" {
   description = "predefined and scoped to a namespace to tag the resources created using defined tags."
   type        = map(string)
