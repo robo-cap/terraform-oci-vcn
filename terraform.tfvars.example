@@ -26,6 +26,17 @@ nat_gateway_display_name = "none"
 
 enable_ipv6 = false
 
+# Optional IPv6 VCN allocation examples.
+# When using only private IPv6 blocks, set vcn_is_oracle_gua_allocation_enabled = false.
+# vcn_is_oracle_gua_allocation_enabled = false
+# vcn_ipv6private_cidr_blocks = ["fd00:0:0::/56"]
+# vcn_byoipv6cidr_details = [
+#   {
+#     byoipv6range_id = "ocid1.byoipv6range.oc1..exampleuniqueid"
+#     ipv6cidr_block  = "2001:db8:1234::/56"
+#   }
+# ]
+
 nat_gateway_public_ip_id = "none"
 
 create_service_gateway = false

@@ -34,9 +34,15 @@ enable_ipv6 = false
 # When enable_ipv6 = true, Oracle GUA allocation defaults to true.
 # Subnet ipv6cidr_blocks shorthand entries derive from public/BYO IPv6 first,
 # then vcn_ipv6private_cidr_blocks.
-# vcn_is_oracle_gua_allocation_enabled = true
-# vcn_ipv6private_cidr_blocks          = []
-# vcn_byoipv6cidr_details              = []
+# When using only private IPv6 blocks, set vcn_is_oracle_gua_allocation_enabled = false.
+# vcn_is_oracle_gua_allocation_enabled = false
+# vcn_ipv6private_cidr_blocks          = ["fd00:0:0::/56"]
+# vcn_byoipv6cidr_details = [
+#   {
+#     byoipv6range_id = "ocid1.byoipv6range.oc1..exampleuniqueid"
+#     ipv6cidr_block  = "2001:db8:1234::/56"
+#   }
+# ]
 
 vcn_cidrs = ["10.0.0.0/16", "172.16.0.0/16", "192.168.0.0/24"]
 
